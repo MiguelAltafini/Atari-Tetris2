@@ -35,16 +35,16 @@ let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 700; // Base speed faster for more dynamic flow
 
-// Tetromino Colors
+// Tetromino Colors (Cyberpunk / Neon Vibe)
 const COLORS = [
     null,
-    '#00FFFF', // I - Cyan
-    '#0000FF', // J - Blue
-    '#FFA500', // L - Orange
-    '#FFFF00', // O - Yellow
-    '#00FF00', // S - Green
-    '#800080', // T - Purple
-    '#FF0000'  // Z - Red
+    '#00F0FF', // I - Neon Cyan
+    '#0055FF', // J - Royal Blue
+    '#FF7700', // L - Bright Orange
+    '#FFEA00', // O - Electric Yellow
+    '#39FF14', // S - Neon Green
+    '#B400FF', // T - Hot Magenta
+    '#FF003C'  // Z - Laser Pink/Red
 ];
 
 // Tetromino Forms
@@ -270,7 +270,17 @@ function boardSweep() {
         ++y;
         linesCleared++;
     }
-    updateScore(linesCleared);
+    
+    if (linesCleared > 0) {
+        // Neon Flash VFX
+        const baseColor = COLORS[Math.floor(Math.random() * 7) + 1];
+        canvas.style.boxShadow = `0 0 40px ${baseColor}, 0 0 80px ${baseColor}`;
+        setTimeout(() => {
+            canvas.style.boxShadow = '0 0 15px rgba(0,0,0,0.8)';
+        }, 150);
+
+        updateScore(linesCleared);
+    }
 }
 
 function playerDrop() {

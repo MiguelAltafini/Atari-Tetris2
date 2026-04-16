@@ -15,7 +15,9 @@
 }
 
 body {
-    background: radial-gradient(circle at center, #1f2833 0%, var(--bg-color) 100%);
+    background: linear-gradient(-45deg, #0b0c10, #1b1236, #240b20, #0a1b24);
+    background-size: 300% 300%;
+    animation: bg-drift 12s ease infinite;
     color: var(--text-color);
     font-family: 'Press Start 2P', monospace;
     display: flex;
@@ -25,6 +27,12 @@ body {
     overflow: hidden;
     user-select: none;
     position: relative;
+}
+
+@keyframes bg-drift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Efeito CRT - Scanlines */
@@ -40,14 +48,22 @@ body::after {
     pointer-events: none;
 }
 
+@keyframes arcade-glow {
+    0% { border-color: #ff0055; box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 35px rgba(255,0,85,0.3); }
+    33% { border-color: #00f0ff; box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 35px rgba(0,240,255,0.3); }
+    66% { border-color: #b400ff; box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 35px rgba(180,0,255,0.3); }
+    100% { border-color: #ff0055; box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 35px rgba(255,0,85,0.3); }
+}
+
 .arcade-cabinet {
     position: relative;
     padding: 35px 30px;
     background: linear-gradient(180deg, #161a22 0%, #0d1015 100%);
     border-radius: 12px;
     border: 3px solid #1f2530;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 25px rgba(102, 252, 241, 0.15);
     z-index: 10;
+    animation: arcade-glow 6s linear infinite;
+    transition: all 0.3s;
 }
 
 .arcade-cabinet::before {
@@ -91,12 +107,18 @@ body::after {
 
 .score-box h2, .next-piece-box h2, .controls-box h2 {
     font-size: 11px;
-    color: var(--accent-color);
     margin-bottom: 12px;
-    text-shadow: var(--accent-glow);
     letter-spacing: 1px;
     line-height: 1.4;
 }
+
+/* Cores Múltiplas e Vibrantes para os textos das caixas */
+.left-panel .score-box:nth-child(1) h2 { color: #FF0055; text-shadow: 0 0 8px #FF0055; }
+.left-panel .score-box:nth-child(2) h2 { color: #39FF14; text-shadow: 0 0 8px #39FF14; }
+.left-panel .score-box:nth-child(3) h2 { color: #00F0FF; text-shadow: 0 0 8px #00F0FF; }
+.right-panel .next-piece-box h2 { color: #FFEA00; text-shadow: 0 0 8px #FFEA00; }
+.right-panel .controls-box h2 { color: #B400FF; text-shadow: 0 0 8px #B400FF; }
+.right-panel .score-box h2 { color: #FF7700; text-shadow: 0 0 8px #FF7700; }
 
 .score-box span {
     font-size: 18px;
