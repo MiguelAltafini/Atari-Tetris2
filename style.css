@@ -180,9 +180,17 @@ body::after {
 #overlay-title {
     font-size: 26px;
     color: var(--accent-color);
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     text-shadow: var(--accent-glow);
     animation: neon-pulse 1.5s infinite alternate;
+}
+
+#overlay-subtitle {
+    font-size: 9px;
+    color: #ff00aa;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    text-shadow: 0 0 10px #ff00aa;
 }
 
 #overlay-msg {

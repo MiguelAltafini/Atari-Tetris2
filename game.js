@@ -10,6 +10,7 @@ const hiScoreElem = document.getElementById('hi-score');
 
 const overlay = document.getElementById('game-overlay');
 const overlayTitle = document.getElementById('overlay-title');
+const overlaySubtitle = document.getElementById('overlay-subtitle');
 const overlayMsg = document.getElementById('overlay-msg');
 
 const COLS = 10;
@@ -446,6 +447,10 @@ function resetGame() {
 
 function showOverlay(title, msg) {
     overlayTitle.innerHTML = title;
+    // Esconder a frase de efeito se não for a tela inicial de Tetris
+    if(overlaySubtitle) {
+        overlaySubtitle.style.display = (title === 'TETRIS') ? 'block' : 'none';
+    }
     overlayMsg.innerHTML = msg;
     overlay.classList.remove('hidden');
 }
