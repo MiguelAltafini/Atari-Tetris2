@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Tetris</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- left panel for scoring -->
+        <div class="panel left-panel">
+            <div class="score-box">
+                <h2>SCORE</h2>
+                <span id="score">0</span>
+            </div>
+            <div class="score-box">
+                <h2>LEVEL</h2>
+                <span id="level">1</span>
+            </div>
+            <div class="score-box">
+                <h2>LINES</h2>
+                <span id="lines">0</span>
+            </div>
+        </div>
+
+        <div class="game-board-container">
+            <canvas id="game-canvas" width="300" height="600"></canvas>
+            
+            <div id="game-overlay" class="overlay">
+                <h1 id="overlay-title">TETRIS</h1>
+                <p id="overlay-msg">Aperte ESPAÇO<br><br>para Iniciar</p>
+            </div>
+        </div>
+
+        <div class="panel right-panel">
+            <div class="next-piece-box">
+                <h2>NEXT</h2>
+                <canvas id="next-canvas" width="120" height="120"></canvas>
+            </div>
+            <div class="controls-box">
+                <h2>CONTROLES</h2>
+                <p>← → : Mover</p>
+                <p>↑ : Rotacionar</p>
+                <p>↓ : Acelerar</p>
+                <p>Espaço : Drop</p>
+                <p>P : Pausar</p>
+            </div>
+             <div class="score-box">
+                <h2>HI-SCORE</h2>
+                <span id="hi-score">0</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
