@@ -33,7 +33,7 @@ let board = [];
 let reqAnimationId = null;
 let lastTime = 0;
 let dropCounter = 0;
-let dropInterval = 1000;
+let dropInterval = 700; // Base speed faster for more dynamic flow
 
 // Tetromino Colors
 const COLORS = [
@@ -134,13 +134,45 @@ function drawMatrix(matrix, offset, context=ctx) {
 }
 
 function draw() {
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = '#05070a'; // very dark blue-ish background
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Draw background grid lines
+    ctx.lineWidth = 0.03;
+    ctx.strokeStyle = '#1e2530';
+    for(let i=0; i<=COLS; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, ROWS);
+        ctx.stroke();
+    }
+    for(let j=0; j<=ROWS; j++) {
+        ctx.beginPath();
+        ctx.moveTo(0, j);
+        ctx.lineTo(COLS, j);
+        ctx.stroke();
+    }
 
     drawMatrix(board, {x: 0, y: 0});
     if (player.matrix) {
+        drawGhost();
         drawMatrix(player.matrix, player.pos);
     }
+}
+
+function drawGhost() {
+    const ghost = {
+        matrix: player.matrix,
+        pos: { x: player.pos.x, y: player.pos.y }
+    };
+    while (!collide(board, ghost)) {
+        ghost.pos.y++;
+    }
+    ghost.pos.y--;
+
+    ctx.globalAlpha = 0.2; // translucent effect
+    drawMatrix(ghost.matrix, ghost.pos);
+    ctx.globalAlpha = 1.0;
 }
 
 function drawNext() {
@@ -214,7 +246,7 @@ function updateScore(linesCleared) {
         level = Math.floor(lines / 10) + 1;
         
         // Speed up: drops counter limit decreases
-        dropInterval = Math.max(100, 1000 - (level - 1) * 100);
+        dropInterval = Math.max(80, 700 - (level - 1) * 80);
         
         scoreElem.innerText = score;
         levelElem.innerText = level;
@@ -329,7 +361,7 @@ function resetGame() {
     score = 0;
     level = 1;
     lines = 0;
-    dropInterval = 1000;
+    dropInterval = 700;
     gameOver = false;
     paused = false;
     
