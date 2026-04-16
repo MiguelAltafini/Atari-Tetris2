@@ -22,6 +22,9 @@ nextCtx.scale(BLOCK_SIZE, BLOCK_SIZE);
 let score = 0;
 let level = 1;
 let lines = 0;
+let combo = 0;
+let floatingTexts = [];
+
 let hiScore = localStorage.getItem('tetrisHiScore') || 0;
 hiScoreElem.innerText = hiScore;
 
@@ -158,6 +161,26 @@ function draw() {
         drawGhost();
         drawMatrix(player.matrix, player.pos);
     }
+
+    // Efeitos de Textos Flutuantes (Combos/Pontos)
+    for(let i = floatingTexts.length-1; i >= 0; i--) {
+        let ft = floatingTexts[i];
+        ft.y -= 0.05;
+        ft.alpha -= 0.015;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, ft.alpha);
+        ctx.fillStyle = ft.color;
+        ctx.font = `${ft.size/BLOCK_SIZE}px 'Press Start 2P'`;
+        ctx.textAlign = 'center';
+        ctx.shadowColor = ft.color;
+        ctx.shadowBlur = 8;
+        ctx.fillText(ft.text, ft.x, ft.y);
+        ctx.restore();
+        
+        if(ft.alpha <= 0) {
+            floatingTexts.splice(i, 1);
+        }
+    }
 }
 
 function drawGhost() {
@@ -238,8 +261,24 @@ function playerReset() {
 
 function updateScore(linesCleared) {
     if (linesCleared > 0) {
+        combo++;
         const lineScores = [0, 100, 300, 500, 800];
-        score += lineScores[linesCleared] * level;
+        let earned = lineScores[linesCleared] * level;
+        
+        // Bonus de Combo
+        if (combo > 1) {
+            const comboBonus = 50 * combo * level;
+            earned += comboBonus;
+            floatingTexts.push({text: `COMBO x${combo}!`, x: COLS/2, y: (player.pos.y || ROWS/2) - 2, color: '#39FF14', size: 12, alpha: 1.5});
+        }
+        
+        if (linesCleared === 4) {
+            floatingTexts.push({text: 'TETRIS!', x: COLS/2, y: (player.pos.y || ROWS/2) - 1, color: '#00F0FF', size: 18, alpha: 1.5});
+        }
+        
+        floatingTexts.push({text: `+${earned}`, x: COLS/2, y: (player.pos.y || ROWS/2) + 1, color: '#FFEA00', size: 10, alpha: 1.5});
+
+        score += earned;
         lines += linesCleared;
         
         // Level logic: every 10 lines
@@ -280,6 +319,8 @@ function boardSweep() {
         }, 150);
 
         updateScore(linesCleared);
+    } else {
+        combo = 0; // Quebrou o combo
     }
 }
 
@@ -291,15 +332,29 @@ function playerDrop() {
         playerReset();
         boardSweep();
         if(!gameOver) AudioSys.lock();
+    } else {
+        // Soft drop: ganha 1 ponto por célula acelerada
+        score += 1;
+        scoreElem.innerText = score;
     }
     dropCounter = 0;
 }
 
 function playerHardDrop() {
+    let dropDist = 0;
     while (!collide(board, player)) {
         player.pos.y++;
+        dropDist++;
     }
     player.pos.y--; // Lock at last valid pos
+    dropDist--;
+
+    if (dropDist > 0) {
+        score += dropDist * 2; // Hard drop recompensa +2 por célula despencada
+        scoreElem.innerText = score;
+        floatingTexts.push({text: `+${dropDist * 2}`, x: player.pos.x + 2, y: player.pos.y, color: '#fff', size: 8, alpha: 1.0});
+    }
+
     merge(board, player);
     playerReset();
     boardSweep();
@@ -371,6 +426,8 @@ function resetGame() {
     score = 0;
     level = 1;
     lines = 0;
+    combo = 0;
+    floatingTexts = [];
     dropInterval = 700;
     gameOver = false;
     paused = false;
